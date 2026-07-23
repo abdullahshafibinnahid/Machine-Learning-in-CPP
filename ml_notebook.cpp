@@ -1,4 +1,3 @@
-// ============================================================================
 //  ml_notebook.cpp
 //
 //  A tiny, dependency-free "ML notebook" in C++.
@@ -14,7 +13,6 @@
 //
 //  Build   : g++ -O2 -std=c++17 ml_notebook.cpp -o ml_notebook
 //  Run     : ./ml_notebook
-// ============================================================================
 
 #include <iostream>
 #include <fstream>
@@ -25,10 +23,8 @@
 #include <iomanip>
 #include <stdexcept>
 
-// ---------------------------------------------------------------------------
 // A minimal CSV reader. Good enough for simple, comma-separated numeric data
 // with a header row (no quoted commas, which we don't need here).
-// ---------------------------------------------------------------------------
 struct CsvTable {
     std::vector<std::string> header;
     std::vector<std::vector<std::string>> rows;
@@ -75,10 +71,8 @@ static int col_index(const CsvTable& t, const std::string& name) {
     throw std::runtime_error("Column not found: " + name);
 }
 
-// ---------------------------------------------------------------------------
 // Linear Regression via batch gradient descent, with z-score normalization
 // of the input features (helps gradient descent converge quickly/stably).
-// ---------------------------------------------------------------------------
 class LinearRegression {
 public:
     void fit(const std::vector<std::vector<double>>& X,
@@ -193,11 +187,11 @@ private:
 };
 
 int main() {
-    std::cout << "==================================================\n";
+    std::cout << "--------------------------------------------------\n";
     std::cout << " C++ ML Notebook: House Price Prediction (Linear Regression)\n";
-    std::cout << "==================================================\n\n";
+    std::cout << "--------------------------------------------------\n";
 
-    // ---- 1. Load training data -------------------------------------------
+    // 1. Load training data 
     std::cout << "[1/4] Loading train.csv ...\n";
     CsvTable train = read_csv("train.csv");
 
@@ -221,14 +215,14 @@ int main() {
     }
     std::cout << "  loaded " << X_train.size() << " training rows\n\n";
 
-    // ---- 2. Train the model ----------------------------------------------
+    // 2. Train the model 
     std::cout << "[2/4] Training linear regression (gradient descent) ...\n";
     LinearRegression model;
     model.fit(X_train, y_train, /*lr=*/0.05, /*epochs=*/5000);
     model.print_equation({"area_sqft", "bedrooms", "age_years"});
     std::cout << "\n";
 
-    // ---- 3. Load test data and predict ------------------------------------
+    // 3. Load test data and predict 
     std::cout << "[3/4] Loading test.csv and generating predictions ...\n";
     CsvTable test = read_csv("test.csv");
     int t_id   = col_index(test, "id");
@@ -248,7 +242,7 @@ int main() {
     }
     std::cout << "  predicted " << predictions.size() << " test rows\n\n";
 
-    // ---- 4. Write submission.csv ------------------------------------------
+    //  4. Write submission.csv 
     std::cout << "[4/4] Writing submission.csv ...\n";
     std::ofstream out("submission.csv");
     out << "id,price_k\n";
@@ -260,7 +254,7 @@ int main() {
 
     std::cout << "  wrote submission.csv with " << predictions.size() << " rows\n\n";
     std::cout << "Done. Compare submission.csv against sample_submission.csv\n";
-    std::cout << "(same id column / format, but with real predicted values).\n";
+    std::cout << "(same id column / format, but with predicted values :D).\n";
 
     return 0;
 }
